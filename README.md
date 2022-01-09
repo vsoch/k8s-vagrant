@@ -72,10 +72,53 @@ NAME   STATUS     ROLES                  AGE     VERSION
 main   NotReady   control-plane,master   7m23s   v1.23.1
 ```
 
+**todo going to try calico here instead**
+
+Apply the networking policy:
+
+```bash
+$ kubectl apply -f https://raw.githubusercontent.com/vsoch/k8s-vagrant/main/k8s/network/kube-flannel.yml
+Warning: policy/v1beta1 PodSecurityPolicy is deprecated in v1.21+, unavailable in v1.25+
+podsecuritypolicy.policy/psp.flannel.unprivileged created
+clusterrole.rbac.authorization.k8s.io/flannel created
+clusterrolebinding.rbac.authorization.k8s.io/flannel created
+serviceaccount/flannel created
+configmap/kube-flannel-cfg created
+daemonset.apps/kube-flannel-ds created
+```
+If you see nodes are unhealthy, follow instructions in [this post](https://medium.com/swlh/setup-own-kubernetes-cluster-via-virtualbox-99a82605bfcc). Mine were healthy :)
+
+```bash
+$ kubectl get cs
+```
+
+Then exit back to your local machine.
+
 ### workers
 
 For each worker, do:
 
 ```bash
+# Example to connect to each one
+$ vagrant ssh worker-1
+$ vagrant ssh worker-2
 ```
-**under development**
+
+Note that this particular hash and token you'll need to copy from the main node output (the last line we saw above).
+```bash
+$ sudo kubeadm join 192.168.33.13:6443 --token xxxxxxxxxxxxxxxxxxxxxxxxxxx \
+    --discovery-token-ca-cert-hash xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+Then go back to the main node, and check your cluster again:
+
+```bash
+$ kubectl get cluster
+```
+
+```bash
+$ kubectl create deployment nginx --image=nginx --port 80
+$ kubectl create deployment webserver --image=nginx --port 80 --replicas=5
+To access from the internet we have to expose it as follow
+vagrant@master:~$ kubectl expose deployment webserver --port 80 --type=NodePort
+```

@@ -1,5 +1,5 @@
-# https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 ---
+# https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
 metadata:
