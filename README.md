@@ -113,12 +113,46 @@ $ sudo kubeadm join 192.168.33.13:6443 --token xxxxxxxxxxxxxxxxxxxxxxxxxxx \
 Then go back to the main node, and check your cluster again:
 
 ```bash
-$ kubectl get cluster
+$ kubectl get nodes
+NAME       STATUS   ROLES                  AGE     VERSION
+main       Ready    control-plane,master   10m     v1.23.1
+worker-1   Ready    <none>                 3m11s   v1.23.1
+worker-2   Ready    <none>                 102s    v1.23.1
 ```
+
+Now create a test deployment.
 
 ```bash
 $ kubectl create deployment nginx --image=nginx --port 80
 $ kubectl create deployment webserver --image=nginx --port 80 --replicas=5
+
 To access from the internet we have to expose it as follow
-vagrant@master:~$ kubectl expose deployment webserver --port 80 --type=NodePort
+$ kubectl expose deployment webserver --port 80 --type=NodePort
+```
+
+And then get the ip address:
+
+```bash
+$ kubectl describe services webserver
+Name:                     webserver
+Namespace:                default
+Labels:                   app=webserver
+Annotations:              <none>
+Selector:                 app=webserver
+Type:                     NodePort
+IP Family Policy:         SingleStack
+IP Families:              IPv4
+IP:                       10.96.1.240
+IPs:                      10.96.1.240
+Port:                     <unset>  80/TCP
+TargetPort:               80/TCP
+NodePort:                 <unset>  32502/TCP
+Endpoints:                10.244.1.3:80,10.244.1.4:80,10.244.2.2:80 + 2 more...
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:                   <none>
+```
+And get it!
+
+```bash
 ```

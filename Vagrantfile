@@ -1,6 +1,5 @@
-
 Vagrant.configure("2") do |config|
-  config.vm.box = "ubuntu/bionic64"
+  config.vm.box = "ubuntu/focal64"
   config.vm.define "main" do | w |
   w.vm.hostname = "main"
   w.vm.network "private_network", ip: "192.168.33.13"
@@ -17,7 +16,7 @@ Vagrant.configure("2") do |config|
    SHELL
   end
 
-  config.vm.box = "ubuntu/bionic64"
+  config.vm.box = "ubuntu/focal64"
   config.vm.define "worker-1" do | w |
       w.vm.hostname = "worker-1"
       w.vm.network "private_network", ip: "192.168.33.14"
@@ -34,7 +33,7 @@ Vagrant.configure("2") do |config|
      apt-get install -y git wget vim
    SHELL
   end
-  config.vm.box = "ubuntu/bionic64"
+  config.vm.box = "ubuntu/focal64"
   config.vm.define "worker-2" do | w |
       w.vm.hostname = "worker-2"
       w.vm.network "private_network", ip: "192.168.33.15"
@@ -52,3 +51,4 @@ Vagrant.configure("2") do |config|
    SHELL
   end
 end
+
