@@ -124,35 +124,59 @@ Now create a test deployment.
 
 ```bash
 $ kubectl create deployment nginx --image=nginx --port 80
-$ kubectl create deployment webserver --image=nginx --port 80 --replicas=5
 
 To access from the internet we have to expose it as follow
-$ kubectl expose deployment webserver --port 80 --type=NodePort
+$ kubectl expose deployment nginx --port 80 --type=NodePort
 ```
 
-And then get the ip address:
+And then get the port address (it will be available from the worker nodes address in /etc/hosts)
 
 ```bash
-$ kubectl describe services webserver
-Name:                     webserver
+$ kubectl describe services nginx
+Name:                     nginx
 Namespace:                default
-Labels:                   app=webserver
+Labels:                   app=nginx
 Annotations:              <none>
-Selector:                 app=webserver
+Selector:                 app=nginx
 Type:                     NodePort
 IP Family Policy:         SingleStack
 IP Families:              IPv4
-IP:                       10.96.1.240
-IPs:                      10.96.1.240
+IP:                       10.111.17.161
+IPs:                      10.111.17.161
 Port:                     <unset>  80/TCP
 TargetPort:               80/TCP
-NodePort:                 <unset>  32502/TCP
-Endpoints:                10.244.1.3:80,10.244.1.4:80,10.244.2.2:80 + 2 more...
+NodePort:                 <unset>  31412/TCP  <----
+Endpoints:                10.244.1.2:80
 Session Affinity:         None
 External Traffic Policy:  Cluster
 Events:                   <none>
 ```
+
 And get it!
 
 ```bash
+$ curl http://192.168.33.14:31412
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+html { color-scheme: light dark; }
+body { width: 35em; margin: 0 auto;
+font-family: Tahoma, Verdana, Arial, sans-serif; }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
 ```
